@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI-IDPS: AI-Driven Cyber Threat Detection & Intelligent Intrusion Prevention
 
 An MCA Mini Project implementing machine-learning-based network intrusion detection and confidence-driven automated intrusion prevention using the NSL-KDD dataset, Scikit-learn, XGBoost, Flask, SQLite, and Chart.js.
@@ -19,3 +20,6 @@ pip install -r requirements.txt
 python ml/train.py
 python seed_demo.py
 python app.py
+=======
+# AI-IDPS
+>>>>>>> 3f62b398f23d56951eff6f3eb0bf16222da3e31f
