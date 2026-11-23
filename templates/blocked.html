@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Blocked IPs{% endblock %}
+{% block heading %}Blocked IP Management{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h2>Firewall Block List</h2>
+      <p class="muted-text">IP addresses automatically blocked by high-confidence detections can be unblocked or re-blocked here.</p>
+    </div>
+    <button type="button" id="refreshBlockedBtn" class="btn btn-outline btn-sm">Refresh</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Block ID</th>
+          <th>IP Address</th>
+          <th>Reason (Attack Class)</th>
+          <th>Blocked At</th>
+          <th>Status</th>
+          <th>Control</th>
+        </tr>
+      </thead>
+      <tbody id="blockedTableBody">
+        {% if blocked_list %}
+          {% for b in blocked_list %}
+            <tr data-block-id="{{ b['block_id'] }}">
+              <td class="mono">B-{{ b['block_id'] }}</td>
+              <td class="mono">{{ b['ip_address'] }}</td>
+              <td><span class="badge badge-info">{{ b['reason'] }}</span></td>
+              <td>{{ b['blocked_at'] }}</td>
+              <td>
+                <span class="badge {{ 'badge-danger' if b['status'] == 'Blocked' else 'badge-success' }}">
+                  {{ b['status'] }}
+                </span>
+              </td>
+              <td>
+                {% if b['status'] == 'Blocked' %}
+                  <button type="button" class="btn btn-outline btn-sm unblock-btn" data-id="{{ b['block_id'] }}">Unblock</button>
+                {% else %}
+                  <button type="button" class="btn btn-danger btn-sm reblock-btn" data-id="{{ b['block_id'] }}">Re-block</button>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="6" class="empty-cell">No IP addresses have been blocked yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block heading %}Threat Summary Reports{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2>Generate Report by Date Range</h2>
+  </div>
+
+  <form id="reportFilterForm" class="report-controls">
+    <div class="form-group">
+      <label for="reportStart">From Date</label>
+      <input type="date" id="reportStart" value="{{ default_start }}" required />
+    </div>
+    <div class="form-group">
+      <label for="reportEnd">To Date</label>
+      <input type="date" id="reportEnd" value="{{ default_end }}" required />
+    </div>
+    <div class="btn-row report-actions">
+      <button type="submit" class="btn btn-primary">Generate Report</button>
+      <a id="downloadCsvBtn" href="{{ url_for('api_report_csv', start=default_start, end=default_end) }}" class="btn btn-outline">
+        Download CSV
+      </a>
+    </div>
+  </form>
+</div>
+
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Flows Analysed</div>
+    <div class="kpi-value" id="repFlows">0</div>
+  </div>
+  <div class="kpi-card kpi-danger">
+    <div class="kpi-label">Threats Detected</div>
+    <div class="kpi-value" id="repThreats">0</div>
+  </div>
+  <div class="kpi-card kpi-warning">
+    <div class="kpi-label">Blocked</div>
+    <div class="kpi-value" id="repBlocked">0</div>
+  </div>
+  <div class="kpi-card kpi-info">
+    <div class="kpi-label">Rate-Limited / Logged</div>
+    <div class="kpi-value" id="repLimitedLogged">0 / 0</div>
+  </div>
+</section>
+
+<div class="card">
+  <div class="card-header">
+    <h2>Attack Family Breakdown</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Attack Class</th>
+          <th>Detected</th>
+          <th>Blocked</th>
+          <th>Rate-limited</th>
+          <th>Logged</th>
+        </tr>
+      </thead>
+      <tbody id="reportTableBody">
+        <tr><td colspan="5" class="empty-cell">Loading report summary...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

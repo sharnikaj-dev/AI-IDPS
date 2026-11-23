@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Start Monitoring{% endblock %}
+{% block heading %}Traffic Monitoring Configuration{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <section class="card">
+    <div class="card-header">
+      <h2>Replay &amp; Prevention Settings</h2>
+      <span class="badge badge-info">Model: {{ active_model }}</span>
+    </div>
+
+    <div id="monitorFeedback" class="alert-banner hidden"></div>
+
+    <form id="monitorConfigForm" class="form-stack">
+      <div class="form-group">
+        <label for="dataSource">Traffic Data Source</label>
+        <select id="dataSource" name="source">
+          <option value="data/KDDTest.txt" selected>NSL-KDD Test Set (data/KDDTest.txt)</option>
+        </select>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="speedMs">Polling Interval (ms)</label>
+          <input type="number" id="speedMs" min="250" max="5000" step="250" value="{{ speed_ms }}" />
+        </div>
+        <div class="form-group">
+          <label for="batchSize">Records per Batch</label>
+          <input type="number" id="batchSize" min="1" max="20" step="1" value="{{ batch_size }}" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="blockThreshold">Block Confidence Threshold (&ge;)</label>
+          <input type="number" id="blockThreshold" min="0.50" max="1.00" step="0.05" value="{{ '%.2f'|format(block_threshold) }}" />
+        </div>
+        <div class="form-group">
+          <label for="limitThreshold">Rate-Limit Confidence Threshold (&ge;)</label>
+          <input type="number" id="limitThreshold" min="0.10" max="0.95" step="0.05" value="{{ '%.2f'|format(limit_threshold) }}" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-row">
+          <input type="checkbox" id="resetReplay" />
+          <span>Restart replay from record #1</span>
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" id="startMonitorBtn" class="btn btn-primary">Start Monitoring</button>
+        <button type="button" id="stopMonitorBtn" class="btn btn-danger">Stop Monitoring</button>
+        <a href="{{ url_for('live') }}" class="btn btn-outline">Open Live Monitor</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <h2>Prevention Decision Policy</h2>
+    </div>
+    <div class="policy-list">
+      <div class="policy-item">
+        <span class="badge badge-danger">HIGH &rarr; Blocked</span>
+        <p>Attack predicted with confidence &ge; Block Threshold (default 0.90). Source IP is added to the Blocked IPs table.</p>
+      </div>
+      <div class="policy-item">
+        <span class="badge badge-warning">MEDIUM &rarr; Rate-limited</span>
+        <p>Attack predicted with confidence between Rate-Limit Threshold (0.60) and Block Threshold (0.90).</p>
+      </div>
+      <div class="policy-item">
+        <span class="badge badge-info">LOW &rarr; Logged</span>
+        <p>Attack predicted below 0.60 confidence is logged with a low-severity alert for manual review.</p>
+      </div>
+      <div class="policy-item">
+        <span class="badge badge-success">NORMAL &rarr; Logged</span>
+        <p>Legitimate traffic is logged to traffic_logs and does not generate an alert.</p>
+      </div>
+    </div>
+
+    <div class="progress-box">
+      <div class="progress-meta">
+        <span>Replay Progress</span>
+        <strong id="monitorProgressText">{{ pos }} / {{ total }}</strong>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="monitorProgressBar" style="width: {{ ((pos / total) * 100) if total else 0 }}%;"></div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

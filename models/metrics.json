@@ -1,0 +1,158 @@
+{
+  "selected_model": "Random Forest",
+  "trained_on": "2026-11-23 21:17:36",
+  "train_records": 100771,
+  "test_records": 25193,
+  "total_clean_records": 125964,
+  "class_distribution": {
+    "Normal": 67343,
+    "DoS": 45927,
+    "Probe": 11647,
+    "R2L": 995,
+    "U2R": 52
+  },
+  "models": [
+    {
+      "algorithm": "Decision Tree",
+      "accuracy": 0.997857,
+      "precision": 0.997868,
+      "recall": 0.997857,
+      "f1_score": 0.997862,
+      "false_positive_rate": 0.00193
+    },
+    {
+      "algorithm": "Random Forest",
+      "accuracy": 0.999047,
+      "precision": 0.999054,
+      "recall": 0.999047,
+      "f1_score": 0.999049,
+      "false_positive_rate": 0.000742
+    },
+    {
+      "algorithm": "XGBoost",
+      "accuracy": 0.999246,
+      "precision": 0.999245,
+      "recall": 0.999246,
+      "f1_score": 0.999245,
+      "false_positive_rate": 0.00052
+    }
+  ],
+  "random_forest_per_class": {
+    "DoS": {
+      "precision": 0.9997,
+      "recall": 1.0,
+      "f1_score": 0.9998,
+      "support": 9186
+    },
+    "Normal": {
+      "precision": 0.999,
+      "recall": 0.9993,
+      "f1_score": 0.9991,
+      "support": 13469
+    },
+    "Probe": {
+      "precision": 0.9983,
+      "recall": 0.9961,
+      "f1_score": 0.9972,
+      "support": 2329
+    },
+    "R2L": {
+      "precision": 0.9949,
+      "recall": 0.9799,
+      "f1_score": 0.9873,
+      "support": 199
+    },
+    "U2R": {
+      "precision": 0.8182,
+      "recall": 0.9,
+      "f1_score": 0.8571,
+      "support": 10
+    }
+  },
+  "labels": [
+    "DoS",
+    "Normal",
+    "Probe",
+    "R2L",
+    "U2R"
+  ],
+  "confusion_matrix": [
+    [
+      9186,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      13459,
+      4,
+      1,
+      2
+    ],
+    [
+      0,
+      9,
+      2320,
+      0,
+      0
+    ],
+    [
+      0,
+      4,
+      0,
+      195,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      9
+    ]
+  ],
+  "top_features": [
+    {
+      "feature": "src_bytes",
+      "importance": 0.11135
+    },
+    {
+      "feature": "dst_host_srv_count",
+      "importance": 0.09032
+    },
+    {
+      "feature": "service",
+      "importance": 0.08613
+    },
+    {
+      "feature": "logged_in",
+      "importance": 0.06847
+    },
+    {
+      "feature": "dst_bytes",
+      "importance": 0.06836
+    },
+    {
+      "feature": "dst_host_serror_rate",
+      "importance": 0.04185
+    },
+    {
+      "feature": "srv_count",
+      "importance": 0.0417
+    },
+    {
+      "feature": "count",
+      "importance": 0.0369
+    },
+    {
+      "feature": "dst_host_same_src_port_rate",
+      "importance": 0.03593
+    },
+    {
+      "feature": "dst_host_diff_srv_rate",
+      "importance": 0.03558
+    }
+  ]
+}

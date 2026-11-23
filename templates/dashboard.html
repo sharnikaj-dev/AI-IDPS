@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Security Operations Dashboard{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <div class="btn-row">
+    <button type="button" id="dashStartBtn" class="btn btn-primary btn-sm">Start Live Replay</button>
+    <button type="button" id="dashStopBtn" class="btn btn-danger btn-sm">Stop Replay</button>
+    <a href="{{ url_for('live') }}" class="btn btn-outline btn-sm">Live Feed</a>
+  </div>
+  <span class="muted-text" id="dashProgressInfo">Processed: 0 / 0</span>
+</div>
+
+<section class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Flows Analysed</div>
+    <div class="kpi-value" id="kpiFlows">0</div>
+  </div>
+  <div class="kpi-card kpi-danger">
+    <div class="kpi-label">Threats Detected</div>
+    <div class="kpi-value" id="kpiThreats">0</div>
+  </div>
+  <div class="kpi-card kpi-warning">
+    <div class="kpi-label">Active Blocked IPs</div>
+    <div class="kpi-value" id="kpiBlocked">0</div>
+  </div>
+  <div class="kpi-card kpi-success">
+    <div class="kpi-label">Model Accuracy</div>
+    <div class="kpi-value" id="kpiAccuracy">0%</div>
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h2>Traffic Over Time (Normal vs Attack)</h2>
+    </div>
+    <div class="chart-box">
+      <canvas id="trafficTimelineChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Detected Threats by Attack Family</h2>
+    </div>
+    <div class="chart-box">
+      <canvas id="attackTypeChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="card-header">
+    <h2>Recent Security Alerts</h2>
+    <a href="{{ url_for('alerts') }}" class="btn btn-outline btn-sm">View All Alerts</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Alert ID</th>
+          <th>Time</th>
+          <th>Source IP</th>
+          <th>Service</th>
+          <th>Attack Type</th>
+          <th>Confidence</th>
+          <th>Severity</th>
+          <th>Action Taken</th>
+        </tr>
+      </thead>
+      <tbody id="dashRecentAlerts">
+        <tr><td colspan="8" class="empty-cell">No alerts recorded yet. Start monitoring to analyse traffic.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

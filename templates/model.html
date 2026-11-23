@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Model Performance{% endblock %}
+{% block heading %}ML Model Performance &amp; Evaluation{% endblock %}
+
+{% block content %}
+{% if not metrics %}
+  <div class="alert-banner alert-error">
+    Model metrics not found. Run <code>python ml/train.py</code> to train the models and generate charts.
+  </div>
+{% else %}
+  {% set rf = (metrics['models'] | selectattr('algorithm', 'equalto', 'Random Forest') | list | first) %}
+  <section class="kpi-grid">
+    <div class="kpi-card kpi-success">
+      <div class="kpi-label">Random Forest Accuracy</div>
+      <div class="kpi-value">{{ '%.2f'|format(rf['accuracy'] * 100) }}%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Weighted Precision</div>
+      <div class="kpi-value">{{ '%.2f'|format(rf['precision'] * 100) }}%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Weighted Recall</div>
+      <div class="kpi-value">{{ '%.2f'|format(rf['recall'] * 100) }}%</div>
+    </div>
+    <div class="kpi-card kpi-warning">
+      <div class="kpi-label">False Positive Rate</div>
+      <div class="kpi-value">{{ '%.2f'|format(rf['false_positive_rate'] * 100) }}%</div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2>Comparison of Trained Models</h2>
+        <span class="badge badge-success">Active: {{ metrics['selected_model'] }}</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Algorithm</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1-Score</th>
+              <th>FPR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in metrics['models'] %}
+              <tr>
+                <td>
+                  <strong>{{ m['algorithm'] }}</strong>
+                  {% if m['algorithm'] == metrics['selected_model'] %}
+                    <span class="badge badge-info">Selected</span>
+                  {% endif %}
+                </td>
+                <td>{{ '%.2f'|format(m['accuracy'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(m['precision'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(m['recall'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(m['f1_score'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(m['false_positive_rate'] * 100) }}%</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Class-Wise Random Forest Report</h2>
+        <span class="muted-text">Test Set: {{ metrics['test_records'] }} records</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1-Score</th>
+              <th>Support</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cls in metrics['labels'] %}
+              {% set c = metrics['random_forest_per_class'][cls] %}
+              <tr>
+                <td><strong>{{ cls }}</strong></td>
+                <td>{{ '%.2f'|format(c['precision'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(c['recall'] * 100) }}%</td>
+                <td>{{ '%.2f'|format(c['f1_score'] * 100) }}%</td>
+                <td>{{ c['support'] }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-header"><h2>Model Comparison Chart</h2></div>
+      <img src="{{ url_for('static', filename='charts/model_comparison.png') }}" alt="Model Comparison Chart" class="chart-img" />
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Random Forest Confusion Matrix</h2></div>
+      <img src="{{ url_for('static', filename='charts/confusion_matrix.png') }}" alt="Confusion Matrix Chart" class="chart-img" />
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Top 10 Important Features</h2></div>
+      <img src="{{ url_for('static', filename='charts/feature_importance.png') }}" alt="Top 10 Feature Importance" class="chart-img" />
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Training Class Distribution</h2></div>
+      <img src="{{ url_for('static', filename='charts/class_distribution.png') }}" alt="Class Distribution Chart" class="chart-img" />
+    </div>
+  </section>
+{% endif %}
+{% endblock %}

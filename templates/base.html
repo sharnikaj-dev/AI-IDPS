@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}AI-IDPS{% endblock %} | AI-Driven Intrusion Detection & Prevention</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body data-page="{{ active_page or '' }}">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">AI</div>
+        <div>
+          <div class="brand-title">AI-IDPS</div>
+          <div class="brand-sub">Threat Defense Console</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+          <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('monitor_start') }}" class="nav-link {% if active_page == 'monitor' %}active{% endif %}">
+          <span>Start Monitoring</span>
+        </a>
+        <a href="{{ url_for('live') }}" class="nav-link {% if active_page == 'live' %}active{% endif %}">
+          <span>Live Monitor</span>
+        </a>
+        <a href="{{ url_for('alerts') }}" class="nav-link {% if active_page == 'alerts' %}active{% endif %}">
+          <span>Alerts</span>
+        </a>
+        <a href="{{ url_for('blocked') }}" class="nav-link {% if active_page == 'blocked' %}active{% endif %}">
+          <span>Blocked IPs</span>
+        </a>
+        <a href="{{ url_for('model_performance') }}" class="nav-link {% if active_page == 'model' %}active{% endif %}">
+          <span>Model Performance</span>
+        </a>
+        <a href="{{ url_for('reports') }}" class="nav-link {% if active_page == 'reports' %}active{% endif %}">
+          <span>Reports</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="user-name">{{ session.get('username', 'Analyst') }}</div>
+          <div class="user-meta">
+            <span class="badge badge-info">{{ session.get('role', 'analyst')|upper }}</span>
+          </div>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm btn-block">Logout</a>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle Menu">&#9776;</button>
+        <h1 class="page-heading">{% block heading %}Dashboard{% endblock %}</h1>
+        <div class="topbar-right">
+          <span id="globalMonitorStatus" class="status-pill status-stopped">Stopped</span>
+        </div>
+      </header>
+
+      <main class="content-area">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

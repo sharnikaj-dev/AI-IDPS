@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Alerts{% endblock %}
+{% block heading %}Intrusion Alerts{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2>Detected Threat Alerts</h2>
+    <div class="btn-row" id="severityFilterGroup">
+      <button type="button" class="btn btn-sm {{ 'btn-primary' if selected_severity == 'ALL' else 'btn-outline' }}" data-severity="ALL">All</button>
+      <button type="button" class="btn btn-sm {{ 'btn-primary' if selected_severity == 'HIGH' else 'btn-outline' }}" data-severity="HIGH">High</button>
+      <button type="button" class="btn btn-sm {{ 'btn-primary' if selected_severity == 'MEDIUM' else 'btn-outline' }}" data-severity="MEDIUM">Medium</button>
+      <button type="button" class="btn btn-sm {{ 'btn-primary' if selected_severity == 'LOW' else 'btn-outline' }}" data-severity="LOW">Low</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Alert ID</th>
+          <th>Time</th>
+          <th>Source IP</th>
+          <th>Protocol / Service</th>
+          <th>Attack Type</th>
+          <th>Confidence</th>
+          <th>Severity</th>
+          <th>Action Taken</th>
+        </tr>
+      </thead>
+      <tbody id="alertsTableBody">
+        {% if alerts %}
+          {% for a in alerts %}
+            <tr>
+              <td class="mono">A-{{ 1000 + a['alert_id'] }}</td>
+              <td>{{ a['alert_time'] }}</td>
+              <td class="mono">{{ a['src_ip'] }}</td>
+              <td>{{ a['protocol'] }} / {{ a['service'] }}</td>
+              <td><span class="badge badge-info">{{ a['attack_type'] }}</span></td>
+              <td>{{ '%.1f'|format(a['confidence'] * 100) }}%</td>
+              <td>
+                <span class="badge {{ 'badge-danger' if a['severity'] == 'HIGH' else ('badge-warning' if a['severity'] == 'MEDIUM' else 'badge-info') }}">
+                  {{ a['severity'] }}
+                </span>
+              </td>
+              <td>
+                <span class="badge {{ 'badge-danger' if a['action_taken'] == 'Blocked' else ('badge-warning' if a['action_taken'] == 'Rate-limited' else 'badge-success') }}">
+                  {{ a['action_taken'] }}
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="8" class="empty-cell">No alerts found for this filter.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

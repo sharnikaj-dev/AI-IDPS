@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Project: AI-IDPS (AI cyber threat detection and intrusion prevention). Spec is in @SPEC.md. Follow it exactly. Python, Flask, SQLite, scikit-learn, XGBoost, Chart.js, NSL-KDD. Never ask me questions; decide yourself, run code in the terminal, and fix errors until it works. Keep code simple and commented. Folders: ml/, models/, templates/, static/, tests/, data/.

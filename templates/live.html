@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Live Monitor{% endblock %}
+{% block heading %}Live Network Traffic Monitor{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div>
+      <h2>Real-Time Flow Inspection</h2>
+      <p class="muted-text">Replaying NSL-KDD traffic records through Random Forest &amp; Intelligent Prevention Engine.</p>
+    </div>
+    <div class="btn-row">
+      <span class="badge badge-info" id="liveCounter">Processed: {{ pos }} / {{ total }}</span>
+      <button type="button" id="liveStartBtn" class="btn btn-primary btn-sm">Start</button>
+      <button type="button" id="liveStopBtn" class="btn btn-danger btn-sm">Stop</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Source IP</th>
+          <th>Destination IP</th>
+          <th>Protocol</th>
+          <th>Service</th>
+          <th>Prediction</th>
+          <th>Confidence</th>
+          <th>Action Taken</th>
+        </tr>
+      </thead>
+      <tbody id="liveBody">
+        {% if recent_rows %}
+          {% for row in recent_rows %}
+            <tr>
+              <td>{{ row['logged_at'] }}</td>
+              <td class="mono">{{ row['src_ip'] }}</td>
+              <td class="mono">{{ row['dst_ip'] }}</td>
+              <td>{{ row['protocol'] }}</td>
+              <td>{{ row['service'] }}</td>
+              <td>
+                <span class="badge {{ 'badge-success' if row['prediction'] == 'Normal' else 'badge-danger' }}">
+                  {{ row['prediction'] }}
+                </span>
+              </td>
+              <td>{{ '%.1f'|format(row['confidence'] * 100) }}%</td>
+              <td>
+                {% if row['action_taken'] == 'Blocked' %}
+                  <span class="badge badge-danger">Blocked</span>
+                {% elif row['action_taken'] == 'Rate-limited' %}
+                  <span class="badge badge-warning">Rate-limited</span>
+                {% else %}
+                  <span class="badge badge-success">Logged</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr id="liveEmptyRow"><td colspan="8" class="empty-cell">No traffic records yet. Click Start to begin replay.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
